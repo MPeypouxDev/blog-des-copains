@@ -33,7 +33,7 @@ require_once 'includes/functions.php';
             <div class="anime-grid">
                 <!-- Exemple de carte d'animé -->
                 <article class="anime-card">
-                    <img src="assets/images/anime/placeholder.jpg" alt="One Piece" class="anime-image">
+                    <img src="assets/img/one_piece_logo.jpg" alt="One Piece" class="anime-image">
                     <div class="anime-info">
                         <h3>One Piece</h3>
                         <p class="anime-genre">Shonen • Aventure</p>
@@ -45,7 +45,7 @@ require_once 'includes/functions.php';
                 </article>
                 
                 <article class="anime-card">
-                    <img src="assets/images/anime/placeholder.jpg" alt="Attack on Titan" class="anime-image">
+                    <img src="assets/img/attack_on_titan_logo.jpg" alt="Attack on Titan" class="anime-image">
                     <div class="anime-info">
                         <h3>Attack on Titan</h3>
                         <p class="anime-genre">Seinen • Action</p>
@@ -57,7 +57,7 @@ require_once 'includes/functions.php';
                 </article>
                 
                 <article class="anime-card">
-                    <img src="assets/images/anime/placeholder.jpg" alt="My Hero Academia" class="anime-image">
+                    <img src="assets/img/my_hero_academia_logo.jpg" alt="My Hero Academia" class="anime-image">
                     <div class="anime-info">
                         <h3>My Hero Academia</h3>
                         <p class="anime-genre">Shonen • Super-héros</p>
