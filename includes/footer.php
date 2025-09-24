@@ -34,10 +34,10 @@
             <h4>Développement</h4>
             <p>Développé avec ❤️ par l'équipe de 4 développeurs</p>
             <ul class="footer-links">
-                <li>🔐 Backend & Auth (Dev 1)</li>
-                <li>🎨 Frontend & Design (Dev 2)</li>
-                <li>⚡ Fonctionnalités avancées (Dev 3)</li>
-                <li>📝 Contenu & Tests (Dev 4)</li>
+                <li>🔐 Backend & Auth (Mathys Peypoux)</li>
+                <li>🎨 Frontend & Design (André Da Mota)</li>
+                <li>⚡ Fonctionnalités avancées (Luca De Chiara)</li>
+                <li>📝 Contenu & Tests (Mohamed Camara)</li>
             </ul>
         </div>
     </div>
