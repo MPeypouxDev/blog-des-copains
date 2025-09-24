@@ -1,0 +1,769 @@
+/* Styles pour le système de critiques d'animés */
+
+.main-content {
+    background: var(--bg-color);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+/* En-tête de l'animé */
+.anime-header {
+    display: flex;
+    gap: 2rem;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.anime-poster {
+    flex-shrink: 0;
+    width: 200px;
+    height: 280px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.anime-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.poster-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+}
+
+.anime-info {
+    flex: 1;
+}
+
+.anime-info h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+.anime-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.anime-meta span {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.genre {
+    background: var(--primary-color);
+    color: white;
+}
+
+.year {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.studio {
+    background: var(--accent-color);
+    color: white;
+}
+
+.rating-overview {
+    margin-bottom: 1.5rem;
+}
+
+.main-rating {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rating-score {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.rating-stars {
+    display: flex;
+    gap: 0.2rem;
+}
+
+.rating-stars .fa-star {
+    font-size: 1.5rem;
+    color: #ddd;
+}
+
+.rating-stars .fa-star.filled {
+    color: #ffd700;
+}
+
+.rating-count {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.synopsis {
+    margin-bottom: 1.5rem;
+}
+
+.synopsis h3 {
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.synopsis p {
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.anime-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Section des critiques */
+.reviews-section {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.reviews-header h2 {
+    color: var(--secondary-color);
+    font-size: 1.8rem;
+}
+
+/* Formulaire de critique */
+.review-form-container {
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 2px dashed var(--border-color);
+}
+
+.review-form {
+    max-width: 100%;
+}
+
+.rating-input {
+    margin-bottom: 1.5rem;
+}
+
+.rating-input label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.star-rating {
+    display: flex;
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating .star {
+    cursor: pointer;
+    font-size: 1.8rem;
+    color: #ddd;
+    transition: var(--transition);
+}
+
+.star-rating .star:hover,
+.star-rating .star.selected {
+    color: #ffd700;
+    transform: scale(1.2);
+}
+
+.rating-display {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.comment-input {
+    margin-bottom: 1.5rem;
+}
+
+.comment-input label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.comment-input textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+}
+
+.comment-input textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.char-counter {
+    text-align: right;
+    margin-top: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.login-prompt {
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+}
+
+.login-prompt a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-prompt a:hover {
+    text-decoration: underline;
+}
+
+/* Distribution des notes */
+.rating-distribution {
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.rating-distribution h3 {
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+}
+
+.rating-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.rating-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rating-label {
+    min-width: 80px;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.bar-container {
+    flex: 1;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    transition: width 1s ease-in-out;
+}
+
+.rating-count {
+    min-width: 30px;
+    text-align: right;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+/* Liste des critiques */
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.no-reviews {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+}
+
+.no-reviews i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.review-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    background: var(--white);
+    transition: var(--transition);
+}
+
+.review-card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-details h4 {
+    margin: 0;
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.user-level {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.review-meta {
+    text-align: right;
+}
+
+.review-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.review-rating .rating-score {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.review-rating .rating-stars {
+    display: flex;
+}
+
+.review-rating .fa-star {
+    font-size: 1rem;
+    color: #ddd;
+}
+
+.review-rating .fa-star.filled {
+    color: #ffd700;
+}
+
+.review-date {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.review-content {
+    margin-bottom: 1rem;
+}
+
+.review-content p {
+    line-height: 1.6;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.review-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    transition: var(--transition);
+}
+
+.action-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.like-btn:hover {
+    background: #28a745;
+    border-color: #28a745;
+}
+
+.report-btn:hover {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.page-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: var(--white);
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.page-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.page-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Section recommandations */
+.recommended-section {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.recommended-section h3 {
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.anime-recommendations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.recommendation-card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.recommendation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.recommendation-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.recommendation-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.rec-placeholder {
+    width: 100%;
+    height: 250px;
+    background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #999;
+}
+
+.rec-info {
+    padding: 1rem;
+}
+
+.rec-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--secondary-color);
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.rec-rating {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.rec-rating i {
+    color: #ffd700;
+    margin-right: 0.2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .anime-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .anime-poster {
+        width: 150px;
+        height: 210px;
+        margin: 0 auto;
+    }
+    
+    .anime-info h1 {
+        font-size: 2rem;
+    }
+    
+    .main-rating {
+        justify-content: center;
+    }
+    
+    .anime-actions {
+        justify-content: center;
+    }
+    
+    .reviews-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .review-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .review-meta {
+        text-align: center;
+    }
+    
+    .star-rating {
+        justify-content: center;
+    }
+    
+    .form-actions {
+        justify-content: center;
+    }
+    
+    .rating-bar {
+        flex-direction: column;
+        gap: 0.3rem;
+        text-align: center;
+    }
+    
+    .anime-recommendations {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+    
+    .pagination {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 1rem 0;
+    }
+    
+    .container {
+        padding: 0 10px;
+    }
+    
+    .anime-header {
+        padding: 1.5rem;
+    }
+    
+    .reviews-section {
+        padding: 1.5rem;
+    }
+    
+    .review-form-container {
+        padding: 1.5rem;
+    }
+    
+    .recommended-section {
+        padding: 1.5rem;
+    }
+    
+    .anime-info h1 {
+        font-size: 1.8rem;
+    }
+    
+    .rating-score {
+        font-size: 2.5rem;
+    }
+    
+    .star-rating .star {
+        font-size: 1.5rem;
+    }
+    
+    .anime-recommendations {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.review-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.review-card:nth-child(2) { animation-delay: 0.1s; }
+.review-card:nth-child(3) { animation-delay: 0.2s; }
+.review-card:nth-child(4) { animation-delay: 0.3s; }
+.review-card:nth-child(5) { animation-delay: 0.4s; }
+
+/* États de chargement */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Styles pour les messages d'erreur/succès intégrés */
+.review-form .error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+}
+
+.review-form .success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    border: 1px solid #c3e6cb;
+}
