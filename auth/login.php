@@ -32,7 +32,7 @@ function getDB() {
     if ($pdo === null) {
         try {
             $host = 'localhost';
-            $dbname = 'blog_copains';
+            $dbname = 'blog-des-copains';
             $username = 'root';
             $password = '';
             
