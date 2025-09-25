@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'config/database.php';
+require_once '../config/database.php';
 
 // Paramètres de recherche
 $search_query = $_GET['q'] ?? '';
@@ -15,7 +15,11 @@ $per_page = 12;
 $offset = ($page - 1) * $per_page;
 
 try {
-    $pdo = new PDO($dsn, $username, $password, $options);
+    try {
+    $pdo = getDB();
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
     
     // Construction de la requête dynamique
     $where_conditions = [];

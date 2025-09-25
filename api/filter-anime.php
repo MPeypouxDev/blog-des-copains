@@ -5,10 +5,14 @@ header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 session_start();
-require_once 'config/database.php';
+require_once '../config/database.php';
 
 try {
-    $pdo = new PDO($dsn, $username, $password, $options);
+    try {
+    $pdo = getDB();
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
     
     $action = $_GET['action'] ?? $_POST['action'] ?? 'search';
     

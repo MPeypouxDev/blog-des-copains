@@ -5,7 +5,7 @@ class Database {
     
     // Configuration WAMP (par défaut)
     private $host = 'localhost';
-    private $dbname = 'anime_blog_db';
+    private $dbname = 'blog-des-copains';
     private $username = 'root';
     private $password = ''; // Par défaut vide sur WAMP
     private $charset = 'utf8mb4';
