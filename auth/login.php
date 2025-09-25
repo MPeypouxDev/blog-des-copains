@@ -4,13 +4,107 @@
  * Gestion complète : inscription, connexion, déconnexion, sessions
  */
 
+// Fonction utilitaire pour les messages flash
+function setFlashMessage($type, $message) {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    $_SESSION['flash_messages'][] = [
+        'type' => $type,
+        'message' => $message
+    ];
+}
+
+function getFlashMessages() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    $messages = $_SESSION['flash_messages'] ?? [];
+    unset($_SESSION['flash_messages']);
+    return $messages;
+}
+
+// Fonction de connexion à la base de données (à adapter selon votre configuration)
+function getDB() {
+    static $pdo = null;
+    
+    if ($pdo === null) {
+        try {
+            $host = 'localhost';
+            $dbname = 'blog-des-copains';
+            $username = 'root';
+            $password = '';
+            
+            $pdo = new PDO(
+                "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
+                $username,
+                $password,
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false
+                ]
+            );
+        } catch (PDOException $e) {
+            die('Erreur de connexion à la base de données : ' . $e->getMessage());
+        }
+    }
+    
+    return $pdo;
+}
+
 class AuthSystem {
     private $db;
     private $session_timeout = 600; // 10 minutes en secondes
     
     public function __construct($database) {
         $this->db = $database;
+        $this->createTablesIfNotExists(); // Ajout de cette ligne
         $this->initSession();
+    }
+    
+    /**
+     * Création des tables nécessaires si elles n'existent pas
+     */
+    private function createTablesIfNotExists() {
+        try {
+            // Table users
+            $this->db->exec("
+                CREATE TABLE IF NOT EXISTS users (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    username VARCHAR(50) UNIQUE NOT NULL,
+                    email VARCHAR(100) UNIQUE NOT NULL,
+                    password VARCHAR(255) NOT NULL,
+                    verification_token VARCHAR(64),
+                    is_active TINYINT(1) DEFAULT 1,
+                    failed_attempts INT DEFAULT 0,
+                    last_attempt TIMESTAMP NULL,
+                    login_count INT DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    last_login TIMESTAMP NULL,
+                    last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            ");
+            
+            // Table remember_tokens
+            $this->db->exec("
+                CREATE TABLE IF NOT EXISTS remember_tokens (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT NOT NULL,
+                    selector VARCHAR(32) UNIQUE NOT NULL,
+                    token VARCHAR(64) NOT NULL,
+                    expires_at TIMESTAMP NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                    INDEX idx_selector (selector),
+                    INDEX idx_expires (expires_at)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            ");
+            
+        } catch (Exception $e) {
+            error_log("Erreur création tables: " . $e->getMessage());
+        }
     }
     
     /**
@@ -69,12 +163,18 @@ class AuthSystem {
                 return ['success' => false, 'errors' => ['Nom d\'utilisateur ou email déjà utilisé']];
             }
             
-            // Hashage du mot de passe
-            $hashed_password = password_hash($password, PASSWORD_ARGON2ID, [
+            // Hashage du mot de passe avec fallback si ARGON2ID non disponible
+            $password_options = [
                 'memory_cost' => 65536,
                 'time_cost' => 4,
                 'threads' => 3
-            ]);
+            ];
+            
+            if (defined('PASSWORD_ARGON2ID')) {
+                $hashed_password = password_hash($password, PASSWORD_ARGON2ID, $password_options);
+            } else {
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            }
             
             // Génération token de vérification
             $verification_token = bin2hex(random_bytes(32));
@@ -130,8 +230,9 @@ class AuthSystem {
             $this->resetFailedAttempts($user['id']);
             
             // Mise à jour du hash si nécessaire (migration vers algo plus récent)
-            if (password_needs_rehash($user['password'], PASSWORD_ARGON2ID)) {
-                $new_hash = password_hash($password, PASSWORD_ARGON2ID);
+            $current_algo = defined('PASSWORD_ARGON2ID') ? PASSWORD_ARGON2ID : PASSWORD_DEFAULT;
+            if (password_needs_rehash($user['password'], $current_algo)) {
+                $new_hash = password_hash($password, $current_algo);
                 $this->updatePassword($user['id'], $new_hash);
             }
             
@@ -163,8 +264,8 @@ class AuthSystem {
         
         // Suppression des cookies "Se souvenir de moi"
         if (isset($_COOKIE['remember_token'])) {
-            setcookie('remember_token', '', time() - 3600, '/');
-            setcookie('remember_selector', '', time() - 3600, '/');
+            setcookie('remember_token', '', time() - 3600, '/', '', false, true);
+            setcookie('remember_selector', '', time() - 3600, '/', '', false, true);
             
             // Suppression du token en base
             if (isset($_SESSION['user_id'])) {
@@ -326,20 +427,21 @@ class AuthSystem {
         $token = bin2hex(random_bytes(32));
         $hashed_token = hash('sha256', $token);
         
+        // Suppression des anciens tokens pour cet utilisateur
+        $stmt = $this->db->prepare("DELETE FROM remember_tokens WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        
         // Stockage en base
         $stmt = $this->db->prepare("
             INSERT INTO remember_tokens (user_id, selector, token, expires_at) 
             VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 30 DAY))
-            ON DUPLICATE KEY UPDATE 
-            selector = VALUES(selector), 
-            token = VALUES(token), 
-            expires_at = VALUES(expires_at)
         ");
         $stmt->execute([$user_id, $selector, $hashed_token]);
         
         // Cookies sécurisés
-        setcookie('remember_selector', $selector, time() + (30 * 24 * 3600), '/', '', false, true);
-        setcookie('remember_token', $token, time() + (30 * 24 * 3600), '/', '', false, true);
+        $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+        setcookie('remember_selector', $selector, time() + (30 * 24 * 3600), '/', '', $secure, true);
+        setcookie('remember_token', $token, time() + (30 * 24 * 3600), '/', '', $secure, true);
     }
     
     /**
@@ -369,8 +471,9 @@ class AuthSystem {
                 return true;
             } else {
                 // Suppression cookies invalides
-                setcookie('remember_selector', '', time() - 3600, '/');
-                setcookie('remember_token', '', time() - 3600, '/');
+                $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+                setcookie('remember_selector', '', time() - 3600, '/', '', $secure, true);
+                setcookie('remember_token', '', time() - 3600, '/', '', $secure, true);
             }
         }
         
@@ -407,33 +510,40 @@ class AuthSystem {
      * Nettoyage sessions expirées et tokens
      */
     public function cleanup() {
-        // Suppression tokens expirés
-        $this->db->exec("DELETE FROM remember_tokens WHERE expires_at < NOW()");
-        
-        // Réinitialisation tentatives anciennes (plus de 24h)
-        $this->db->exec("
-            UPDATE users 
-            SET failed_attempts = 0, last_attempt = NULL 
-            WHERE last_attempt < DATE_SUB(NOW(), INTERVAL 24 HOUR)
-        ");
+        try {
+            // Suppression tokens expirés
+            $this->db->exec("DELETE FROM remember_tokens WHERE expires_at < NOW()");
+            
+            // Réinitialisation tentatives anciennes (plus de 24h)
+            $this->db->exec("
+                UPDATE users 
+                SET failed_attempts = 0, last_attempt = NULL 
+                WHERE last_attempt < DATE_SUB(NOW(), INTERVAL 24 HOUR)
+            ");
+        } catch (Exception $e) {
+            error_log("Erreur cleanup: " . $e->getMessage());
+        }
     }
 }
 
 /**
- * Fonctions utilitaires globales
+ * Instance globale et initialisation
  */
-
-// Instance globale
-$auth = new AuthSystem(getDB());
-
-// Vérification automatique du "Se souvenir de moi" sur chaque page
-if (!$auth->isLoggedIn()) {
-    $auth->checkRememberMe();
-}
-
-// Nettoyage périodique (1% de chance à chaque chargement)
-if (rand(1, 100) === 1) {
-    $auth->cleanup();
+try {
+    $auth = new AuthSystem(getDB());
+    
+    // Vérification automatique du "Se souvenir de moi" sur chaque page
+    if (!$auth->isLoggedIn()) {
+        $auth->checkRememberMe();
+    }
+    
+    // Nettoyage périodique (1% de chance à chaque chargement)
+    if (rand(1, 100) === 1) {
+        $auth->cleanup();
+    }
+} catch (Exception $e) {
+    error_log("Erreur initialisation auth: " . $e->getMessage());
+    die('Erreur système. Veuillez réessayer plus tard.');
 }
 
 /**
